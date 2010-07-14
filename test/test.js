@@ -107,6 +107,11 @@ var ns = require('../lib/ns');
             as.equal(ns.nsWrite('abc', 0, 0), '0:,');
             ex(as, 'payEnd is out of bounds', 'abc', 0, -1);
             ex(as, 'payEnd is out of bounds', 'abc', 0, 4);
+        },
+        'bufPay' : function(as) {
+            as.equal(ns.nsWrite(new Buffer('abc')), '3:abc,');
+            as.equal(ns.nsWrite(new Buffer('abc'), 1), '2:bc,');
+            as.equal(ns.nsWrite(new Buffer('abc'), 1, 2), '1:b,');
         }
     });
 
