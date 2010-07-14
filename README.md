@@ -2,6 +2,11 @@ A braindead module for reading and writing
 [netstrings](http://cr.yp.to/proto/netstrings.txt).
 
 ## API
+    nsWriteLength(len)
+
+Compute the number of bytes to required serialize a netstring with the `len`
+bytes.
+
     nsWrite(pay, payStart = 0, payEnd = pay.length, buf = undefined, bufOff = 0)
 
 Write the payload `pay ` out in netstring format, returning a string. The
@@ -12,7 +17,8 @@ string or a `Buffer` object.
 
 If the `buf` parameter is specified, the netstring is written to this buffer
 rather than returned as a string. The `bufOff` parameter allows specifying
-the offset into the buffer at which to begin writing.
+the offset into the buffer at which to begin writing. The length of the
+resulting netstring in bytes is returned.
 
     nsPayload(buf, off = 0)
 

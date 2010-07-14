@@ -58,6 +58,21 @@ var ns = require('../lib/ns');
 })();
 
 (function() {
+    var ts = new at.TestSuite('nsWriteLength');
+
+    ts.addTests({
+        'simple' : function(as) {
+            as.equal(ns.nsWriteLength(0), 3);
+            as.equal(ns.nsWriteLength(1), 4);
+            as.equal(ns.nsWriteLength(9), 12);
+            as.equal(ns.nsWriteLength(10), 14);
+        }
+    });
+
+    ts.runTests();
+})();
+
+(function() {
     var ts = new at.TestSuite('nsPayload');
 
     ts.addTests({
@@ -88,6 +103,18 @@ var ns = require('../lib/ns');
         }
     };
 
+    var beq = function(as, pay, payStart, payEnd, bufLen, bufOff) {
+        var buf = new Buffer(ns.nsWriteLength(bufLen));
+        var nsLen = ns.nsWrite.call(this, pay, payStart, payEnd, buf, bufOff)
+        as.ok(nsLen >= 3);
+
+        var bb = buf.slice(bufOff, bufOff + nsLen);
+        as.equal(
+            bb.toString(),
+            ns.nsWrite(pay, payStart, payEnd)
+        );
+    };
+
     var ts = new at.TestSuite('nsWrite');
 
     ts.addTests({
@@ -112,6 +139,11 @@ var ns = require('../lib/ns');
             as.equal(ns.nsWrite(new Buffer('abc')), '3:abc,');
             as.equal(ns.nsWrite(new Buffer('abc'), 1), '2:bc,');
             as.equal(ns.nsWrite(new Buffer('abc'), 1, 2), '1:b,');
+        },
+        'bufTarget' : function(as) {
+            beq(as, 'abc', 0, 3, 3, 0);
+            beq(as, 'abc', 0, 1, 3, 0);
+            beq(as, 'abc', 0, 3, 10, 1);
         }
     });
 
