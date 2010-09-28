@@ -127,6 +127,7 @@ var ns = require('../lib/ns');
 
     ts.addTests({
         'simple' : function(as) {
+            as.equal(ns.nsWrite(''), '0:,');
             as.equal(ns.nsWrite('abc'), '3:abc,');
             as.equal(ns.nsWrite('a'), '1:a,');
         },
