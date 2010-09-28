@@ -27,6 +27,10 @@ var ns = require('../lib/ns');
             ex(as, '03:', 'Invalid netstring with leading 0');
             ex(as, '00:', 'Invalid netstring with leading 0');
         },
+        'leading colon' : function(as) {
+            ex(as, ':', 'Invalid netstring with leading \':\'');
+            ex(as, ':a', 'Invalid netstring with leading \':\'');
+        },
         'invalid char' : function(as) {
             ex(as, '3;', 'Unexpected character \';\' found at offset 1');
             ex(as, ';', 'Unexpected character \';\' found at offset 0');
