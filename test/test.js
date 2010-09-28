@@ -83,6 +83,7 @@ var ns = require('../lib/ns');
 
     ts.addTests({
         'simple' : function(as) {
+            as.equal(ns.nsPayload('0:,'), '');
             as.equal(ns.nsPayload('3:abc,'), 'abc');
             as.equal(ns.nsPayload(new Buffer('3:abc,')), 'abc');
         },
