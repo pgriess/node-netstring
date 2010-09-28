@@ -20,6 +20,7 @@ var ns = require('../lib/ns');
             as.equal(ns.nsPayloadLength('30:'), 30);
         },
         'incomplete' : function(as) {
+            as.equal(ns.nsPayloadLength(''), -1);
             as.equal(ns.nsPayloadLength('30'), -1);
         },
         'leading zero' : function(as) {
@@ -54,6 +55,7 @@ var ns = require('../lib/ns');
             as.equal(ns.nsLength('30:'), 34);
         },
         'incomplete' : function(as) {
+            as.equal(ns.nsLength(''), -1);
             as.equal(ns.nsLength('30'), -1);
         },
     });
@@ -85,6 +87,7 @@ var ns = require('../lib/ns');
             as.equal(ns.nsPayload(new Buffer('3:abc,')), 'abc');
         },
         'incomplete' : function(as) {
+            as.equal(ns.nsPayload(''), -1);
             as.equal(ns.nsPayload('3'), -1);
             as.equal(ns.nsPayload('3:ab'), -1);
             as.equal(ns.nsPayload('3:abc'), -1);
