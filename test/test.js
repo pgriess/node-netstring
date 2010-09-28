@@ -2,6 +2,7 @@
 
 var at = require('./async_testing');
 var Buffer = require('buffer').Buffer;
+var events = require('events');
 var ns = require('../lib/ns');
 
 (function() {
@@ -153,6 +154,40 @@ var ns = require('../lib/ns');
             beq(as, 'abc', 0, 3, 3, 0);
             beq(as, 'abc', 0, 1, 3, 0);
             beq(as, 'abc', 0, 3, 10, 1);
+        }
+    });
+
+    ts.runTests();
+})();
+
+(function() {
+    var ts = new at.TestSuite('Stream');
+
+    ts.addTests({
+        'simple' : function(as) {
+            var is  = new events.EventEmitter();
+            var ins = new ns.Stream(is);
+
+            var MSGS = [
+                "abc",
+                "hello world!",
+                "café",
+                "a",
+                "b",
+                "c"
+            ];
+
+            var msgsReceived = 0;
+            ins.addListener('data', function(d) {
+                as.equal(d.toString(), MSGS[msgsReceived]);
+                msgsReceived++;
+            });
+
+            is.emit('data', new Buffer("3:abc,"));
+            is.emit('data', new Buffer("12:hello"));
+            is.emit('data', new Buffer(" world!,"));
+            is.emit('data', new Buffer("5:café,"));
+            is.emit('data', new Buffer("1:a,1:b,1:c,"));
         }
     });
 
