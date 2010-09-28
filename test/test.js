@@ -94,6 +94,10 @@ var ns = require('../lib/ns');
             as.equal(ns.nsPayload('3:ab'), -1);
             as.equal(ns.nsPayload('3:abc'), -1);
         },
+        'utf8' : function(as) {
+          as.equal(ns.nsPayload('3:☃,'), '☃');
+          as.equal(ns.nsPayload(new Buffer('3:☃,')), '☃');
+        }
     });
 
     ts.runTests();
@@ -131,6 +135,10 @@ var ns = require('../lib/ns');
             as.equal(ns.nsWrite(''), '0:,');
             as.equal(ns.nsWrite('abc'), '3:abc,');
             as.equal(ns.nsWrite('a'), '1:a,');
+        },
+        'utf8' : function(as) {
+          as.equal(ns.nsWrite('☃'), '3:☃,');
+          as.equal(ns.nsWrite(new Buffer('☃')), '3:☃,');
         },
         'start' : function(as) {
             as.equal(ns.nsWrite('abc', 1), '2:bc,');
