@@ -207,6 +207,7 @@ var ns = require('../lib/ns');
 
             var msgsReceived = 0;
             ins.addListener('data', function(d) {
+                as.equal('object', typeof d);
                 as.equal(d.toString(), MSGS[msgsReceived]);
                 msgsReceived++;
             });
@@ -216,6 +217,27 @@ var ns = require('../lib/ns');
             is.emit('data', new Buffer(" world!,"));
             is.emit('data', new Buffer("5:café,"));
             is.emit('data', new Buffer("1:a,1:b,1:c,"));
+        },
+        'set encoding' : function(as) {
+            var is  = new events.EventEmitter();
+            var ins = new ns.Stream(is);
+            ins.setEncoding('utf8');
+
+            var MSGS = [
+                "a",
+                "b",
+                "c"
+            ];
+
+            var msgsReceived = 0;
+            ins.addListener('data', function(d) {
+                as.equal('string', typeof d);
+                as.equal(d, MSGS[msgsReceived]);
+                msgsReceived++;
+            });
+
+            is.emit('data', new Buffer("1:a,1:b,"));
+            is.emit('data', new Buffer("1:c,"));
         }
     });
 
