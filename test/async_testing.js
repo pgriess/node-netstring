@@ -1,4 +1,4 @@
-var sys = require('sys'),
+var util = require(!!process.binding('natives').util ? 'util' : 'sys'),
     assert = require('assert'),
     events = require('events'),
     fs = require('fs'),
@@ -51,7 +51,7 @@ var Test = function(name, func, suite) {
   this.__failure = null;
   this.__symbol = '.';
 };
-sys.inherits(Test, events.EventEmitter);
+util.inherits(Test, events.EventEmitter);
 
 Test.prototype.run = function() {
   var self = this;
@@ -182,11 +182,11 @@ TestSuite.prototype.finish = function() {
   output += this.tests.length + ' test' + (this.tests.length == 1 ? '' : 's') + '; ';
   output += failures.length + ' failure' + (failures.length == 1 ? '' : 's') + '; ';
   output += this.numAssertions + ' assertion' + (this.numAssertions == 1 ? '' : 's') + ' ';
-  sys.error(output);
+  util.error(output);
 
-  sys.error('');
+  util.error('');
   failures.forEach(function(t) {
-      sys.error(t.failureString());
+      util.error(t.failureString());
     });
 
   if( this.callback ) {
@@ -221,7 +221,7 @@ TestSuite.prototype.runTests = function(callback) {
   if( callback ) {
     this.callback = callback;
   }
-  sys.error('Running "' + this.name + '"');
+  util.error('Running "' + this.name + '"');
   this.runTest(0);
 };
 TestSuite.prototype.runTest = function(testIndex) {
@@ -249,12 +249,12 @@ TestSuite.prototype.runTest = function(testIndex) {
     process.addListener('uncaughtException', errorListener);
 
     var exitListener = function() {
-      sys.error("\n\nOoops! The process exited in the middle of the test '" + t.__name + "'\nDid you forget to finish it?\n");
+      util.error("\n\nOoops! The process exited in the middle of the test '" + t.__name + "'\nDid you forget to finish it?\n");
     };
     process.addListener('exit', exitListener);
   }
   else {
-    sys.error('  Starting test "' + this.__name + '"');
+    util.error('  Starting test "' + this.__name + '"');
   }
 
   try {
@@ -346,7 +346,7 @@ exports.runSuites = function(module, callback) {
     var suite = suites.shift();
     suite.runTests(function() {
         if( suites.length > 0 ) {
-          sys.error('----------------------------------\n');
+          util.error('----------------------------------\n');
         }
         stats.numSuites++;
         if( suite.numFailedTests > 0 ) {
@@ -356,7 +356,7 @@ exports.runSuites = function(module, callback) {
       });
   }
 
-  sys.error('');
+  util.error('');
   runNextSuite();
 };
 
@@ -404,7 +404,7 @@ exports.runSuitesInPaths = function(paths) {
     if( sts ) {
       stats.numSuites += sts.numSuites;
       stats.numFailed += sts.numFailed;
-      sys.error('----------------------------------');
+      util.error('----------------------------------');
     }
 
     if( testFiles.length < 1 ) {
@@ -412,7 +412,7 @@ exports.runSuitesInPaths = function(paths) {
       if( stats.numFailed > 0 ) {
         output += ': ' + stats.numFailed + ' had failures';
       }
-      sys.error(output);
+      util.error(output);
       return;
     }
     var file = testFiles.shift();
